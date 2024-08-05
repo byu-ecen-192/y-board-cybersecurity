@@ -8,10 +8,13 @@
 const String ssid = "BYU-WiFi";
 const String serverUrl = "http://ecen192.byu.edu/";
 const int MAX_ATTEMPTS = 5;
-
+const std::string RICKROLL_FILENAME = "/rickroll.wav";
 boolean display_password = false;
 String ip_address = "";
 String app_password = "";
+// Following used for polling
+unsigned long previousMillis = 0;    // Store the last time the poll was done
+const long interval = 2000;          // Interval at which to poll (milliseconds)
 
 void cyber_init()
 {
@@ -26,9 +29,15 @@ void cyber_init()
 
 void cyber_loop()
 {
-    pollForCommands();                                       // Poll for commands from the server
+unsigned long currentMillis = millis();
+    // Wait for 1 second to poll for commands
+    if (currentMillis - previousMillis >= interval) {
+        previousMillis = currentMillis;
+        pollForCommands();
+    }
+    // Loop the rest as normal
     screen_loop(ip_address, app_password, display_password); // Display the IP address and password
-    delay(1000);                                             // Delay for 1 second
+    Yboard.loop_speaker(); // Loop the speaker (for rickroll)
 }
 
 void cyber_wifi_init()
@@ -90,7 +99,7 @@ void getCredentials()
         }
         else
         {
-            printf("Error: HTTP request failed with error code %d\n", httpResponseCode);
+            printf("Error getting credentials: HTTP request failed with error code %d\n", httpResponseCode);
             display_text("HTTP error: " + String(httpResponseCode));
             delay(5000); // Wait for 5 seconds before retrying
         }
@@ -130,8 +139,6 @@ void pollForCommands()
             printf("Changing LED color to (%d, %d, %d)\n", r, g, b);
             // Implement your LED color change logic here
             Yboard.set_all_leds_color(r, g, b);
-            // Confirm that the command was executed
-            confirmCommandExecuted(command);
         }
         else if (command == "change_password")
         {
@@ -139,22 +146,23 @@ void pollForCommands()
             printf("Changing password to %s\n", new_password.c_str());
             // Implement your password change logic here
             app_password = new_password;
-            // Confirm that the command was executed
-            confirmCommandExecuted(command);
         }
         else if (command == "display_password")
         {
             display_password = true;
             Serial.println("Display password set to true.");
-            // Confirm that the command was executed
-            confirmCommandExecuted(command);
         }
         else if (command == "hide_password")
         {
             display_password = false;
             Serial.println("Display password set to false.");
-            // Confirm that the command was executed
-            confirmCommandExecuted(command);
+        }
+        else if (command == "rickroll")
+        {
+            Serial.println("RickRolling...");
+            // Play sound
+            YAudio::stop_speaker();
+            YAudio::play_sound_file(RICKROLL_FILENAME);
         }
         else
         {
@@ -163,8 +171,9 @@ void pollForCommands()
     }
     else
     {
-        printf("Error: HTTP request failed with error code %d\n", httpResponseCode);
+        printf("Error while polling: HTTP request failed with error code %d\n", httpResponseCode);
     }
+    // End http connection
     http.end();
 }
 
@@ -172,7 +181,7 @@ void pollForCommands()
 void confirmCommandExecuted(String command)
 {
     HTTPClient http;
-    String fullUrl = serverUrl + "/confirm_command";
+    String fullUrl = serverUrl + "confirm_command";
     fullUrl += "?command=" + command;
     http.begin(fullUrl);
     int httpResponseCode = http.GET();
