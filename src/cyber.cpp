@@ -8,7 +8,7 @@
 const String ssid = "BYU-WiFi";
 const String serverUrl = "http://ecen192.byu.edu/";
 const int MAX_ATTEMPTS = 5;
-const std::string RICKROLL_FILENAME = "/rickroll.wav";
+const std::string RICKROLL_FILENAME = "/.song.wav";
 boolean display_password = false;
 String ip_address = "";
 String app_password = "";
