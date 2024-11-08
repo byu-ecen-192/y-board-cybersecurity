@@ -18,7 +18,7 @@ void screen_init()
   display.setTextColor(ON);
   display.setRotation(ZERO_DEG); // Can be 0, 90, 180, or 270
   display.setTextWrap(false);
-  display.dim(BRIGHTNESS_DAMPER);
+  //display.dim(BRIGHTNESS_DAMPER);
   display.display();
 }
 
