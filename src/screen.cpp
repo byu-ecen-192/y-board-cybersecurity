@@ -7,7 +7,7 @@
 
 #include "screen.h"
 
-Adafruit_SSD1306 display(128, 64); // Create display
+Adafruit_SSD1306 display(128, 32); // Create display
 uint8_t TEXT_SIZE = 1;
 
 void screen_init()

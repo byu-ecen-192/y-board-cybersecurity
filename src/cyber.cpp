@@ -37,7 +37,6 @@ unsigned long currentMillis = millis();
     }
     // Loop the rest as normal
     screen_loop(ip_address, app_password, display_password); // Display the IP address and password
-    Yboard.loop_speaker(); // Loop the speaker (for rickroll)
 }
 
 void cyber_wifi_init()
