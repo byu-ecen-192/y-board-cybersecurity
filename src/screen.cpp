@@ -1,3 +1,4 @@
+#include "yboard.h"
 #include "HTTPClient.h"
 #include <WiFi.h>
 #include <ArduinoJson.h>
@@ -7,19 +8,18 @@
 
 #include "screen.h"
 
-Adafruit_SSD1306 display(128, 32); // Create display
 uint8_t TEXT_SIZE = 1;
 
 void screen_init()
 {
   delay(1000);                               // Display needs time to initialize
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3c); // Initialize display with I2C address: 0x3C
-  display.clearDisplay();
-  display.setTextColor(ON);
-  display.setRotation(ZERO_DEG); // Can be 0, 90, 180, or 270
-  display.setTextWrap(false);
+  Yboard.display.begin(SSD1306_SWITCHCAPVCC, 0x3c); // Initialize display with I2C address: 0x3C
+  Yboard.display.clearDisplay();
+  Yboard.display.setTextColor(ON);
+  Yboard.display.setRotation(ZERO_DEG); // Can be 0, 90, 180, or 270
+  Yboard.display.setTextWrap(false);
   //display.dim(BRIGHTNESS_DAMPER);
-  display.display();
+  Yboard.display.display();
 }
 
 void screen_loop(String ip_address, String app_password, bool display_password)
@@ -29,16 +29,16 @@ void screen_loop(String ip_address, String app_password, bool display_password)
 
 void display_text(String text)
 {
-  display.clearDisplay(); // Clear the display
+  Yboard.display.clearDisplay(); // Clear the display
 
   draw_text(text, 0, 0); // Draw text
 
-  display.display(); // Display
+  Yboard.display.display(); // Display
 }
 
 void display_info(String ip_address, String app_password, bool display_password)
 {
-  display.clearDisplay(); // Clear the display
+  Yboard.display.clearDisplay(); // Clear the display
 
   draw_text("IP Address", 0, 0); // Draw line for identifer
   draw_text(ip_address, 0, 16);  // Draw ip address
@@ -49,12 +49,12 @@ void display_info(String ip_address, String app_password, bool display_password)
     draw_text(app_password, 0, 48); // Draw password
   }
 
-  display.display(); // Display
+  Yboard.display.display(); // Display
 }
 
 void draw_text(String text, int x, int y)
 {
-  display.setCursor(x, y);
-  display.setTextSize(TEXT_SIZE);
-  display.print(text);
+  Yboard.display.setCursor(x, y);
+  Yboard.display.setTextSize(TEXT_SIZE);
+  Yboard.display.print(text);
 }

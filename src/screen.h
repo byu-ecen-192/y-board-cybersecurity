@@ -14,7 +14,7 @@ void draw_text(String text, int x = 0, int y = 0);
 #define SCREEN_BODY_HEIGHT 48
 
 // Screen Orientation
-#define ZERO_DEG 0
+#define ZERO_DEG 90
 #define NINETY_DEG 1
 #define ONE_EIGHTY_DEG 2
 #define TWO_SEVENTY_DEG 3
